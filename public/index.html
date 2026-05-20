@@ -3,768 +3,880 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WOLF TRACK — Silent Wolf API · Free Spotify Engine</title>
+  <title>WOLF TECH — Silent Wolf API · Free Spotify Engine</title>
   <meta name="description" content="Silent Wolf API by WOLF TECH. Free, unlimited Spotify search without credentials. No API keys, no sign-ups, no rate limits." />
   <meta name="author" content="WOLF TECH · SILENT WOLF" />
   <meta name="keywords" content="Spotify API, free music API, wolf tech, silent wolf, spotify search" />
   <meta name="robots" content="index, follow" />
-
-  <!-- Open Graph -->
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="WOLF TRACK — Silent Wolf API" />
+  <meta property="og:title" content="WOLF TECH — Silent Wolf API" />
   <meta property="og:description" content="Free, unlimited Spotify API by WOLF TECH. No API keys, no sign-ups." />
   <meta property="og:site_name" content="WOLF TECH · SILENT WOLF" />
-
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
-
   <style>
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green: #00ff00;
+      --green-dim: rgba(0,255,0,0.18);
+      --green-border: rgba(0,255,0,0.2);
+      --green-border-h: rgba(0,255,0,0.45);
+      --green-glow: 0 0 22px rgba(0,255,0,0.28);
+      --bg: #000;
+      --card: rgba(10,10,10,0.75);
+      --card-h: rgba(0,255,0,0.03);
+      --text: #e2e8f0;
+      --muted: #9ca3af;
+      --faint: #4b5563;
+      --white: #ffffff;
+      --red: #ff4d4d;
+      --font-mono: 'JetBrains Mono', monospace;
+      --font-display: 'Orbitron', monospace;
     }
 
+    html { scroll-behavior: smooth; }
+
     body {
-      background: #000;
-      color: #00ff00;
-      font-family: 'JetBrains Mono', monospace;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-mono);
       -webkit-font-smoothing: antialiased;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
     }
 
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
+    a { text-decoration: none; color: inherit; }
 
-    :root {
-      --primary: #00ff00;
-      --primary-border: rgba(0, 255, 0, 0.2);
-      --primary-border-hover: rgba(0, 255, 0, 0.4);
-      --primary-glow: 0 0 20px rgba(0, 255, 0, 0.3);
-      --gray-500: #6b7280;
-      --gray-400: #9ca3af;
-      --gray-300: #d1d5db;
-      --white: #ffffff;
-      --card-bg: rgba(0, 0, 0, 0.4);
-    }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: #000; }
+    ::-webkit-scrollbar-thumb { background: rgba(0,255,0,0.3); border-radius: 2px; }
 
-    /* Neon grid background */
+    /* ── Grid bg ── */
     .neon-bg {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      background: linear-gradient(rgba(0, 255, 0, 0.03) 1px, transparent 1px),
-                  linear-gradient(90deg, rgba(0, 255, 0, 0.03) 1px, transparent 1px);
-      background-size: 50px 50px;
-      pointer-events: none;
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background:
+        linear-gradient(rgba(0,255,0,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,255,0,0.025) 1px, transparent 1px);
+      background-size: 48px 48px;
     }
     .neon-bg::after {
       content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0, 255, 0, 0.06) 0%, transparent 70%);
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(0,255,0,0.07) 0%, transparent 70%);
     }
 
-    ::-webkit-scrollbar {
-      width: 4px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #000;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: rgba(0, 255, 0, 0.3);
-      border-radius: 2px;
-    }
-
-    /* Navigation */
+    /* ── Nav ── */
     nav {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 50;
-      background: rgba(0, 0, 0, 0.95);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--primary-border);
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(0,0,0,0.92);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--green-border);
     }
     .nav-inner {
-      max-width: 1400px;
-      margin: 0 auto;
+      max-width: 1280px; margin: 0 auto;
       padding: 0 1.5rem;
-      display: flex;
-      align-items: center;
+      display: flex; align-items: center;
       justify-content: space-between;
       height: 64px;
+      gap: 16px;
     }
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+    .logo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
     .logo-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
-      background: rgba(0, 255, 0, 0.05);
-      border: 1px solid var(--primary-border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      width: 38px; height: 38px; border-radius: 10px;
+      background: rgba(0,255,0,0.06);
+      border: 1px solid var(--green-border);
+      display: flex; align-items: center; justify-content: center;
       animation: glowPulse 3s ease-in-out infinite;
     }
-    .logo-icon svg {
-      width: 22px;
-      height: 22px;
-    }
-    .logo-text {
-      font-family: 'Orbitron', monospace;
-      font-weight: 900;
-      font-size: 1.2rem;
-      letter-spacing: 0.15em;
-    }
-    .logo-wolf {
-      color: var(--primary);
-    }
-    .logo-bot {
-      color: var(--gray-300);
-    }
-    .logo-sub {
-      font-size: 0.65rem;
-      color: var(--gray-500);
-      margin-top: 2px;
-    }
+    .logo-icon svg { width: 20px; height: 20px; }
+    .logo-text { font-family: var(--font-display); font-weight: 900; font-size: 1.05rem; letter-spacing: 0.15em; }
+    .logo-wolf { color: var(--green); }
+    .logo-rest { color: var(--white); }
+    .logo-sub { font-size: 0.6rem; color: var(--faint); margin-top: 1px; }
     .nav-links {
-      display: flex;
-      gap: 24px;
+      display: flex; gap: 20px; align-items: center;
     }
     .nav-links a {
-      font-size: 0.75rem;
-      color: var(--gray-400);
-      font-family: 'JetBrains Mono', monospace;
-      transition: color 0.2s;
+      font-size: 0.7rem; color: var(--muted);
+      letter-spacing: 0.08em; transition: color 0.2s;
     }
-    .nav-links a:hover {
-      color: var(--primary);
-    }
-    .badge {
+    .nav-links a:hover { color: var(--green); }
+    .nav-badge {
       padding: 4px 12px;
-      border: 1px solid var(--primary-border);
+      border: 1px solid var(--green-border);
       border-radius: 20px;
-      font-size: 0.65rem;
-      color: var(--primary);
-      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem; color: var(--green);
+      white-space: nowrap; flex-shrink: 0;
+    }
+    .nav-hamburger {
+      display: none; background: none; border: none;
+      cursor: pointer; color: var(--green); font-size: 1.3rem;
+      padding: 4px 8px;
     }
 
-    /* Main layout */
+    /* ── Page wrapper ── */
     .page {
-      flex: 1;
-      padding: 6rem 1.5rem 3rem;
-      position: relative;
-      z-index: 10;
-      max-width: 1400px;
-      margin: 0 auto;
-      width: 100%;
+      flex: 1; position: relative; z-index: 10;
+      max-width: 1280px; margin: 0 auto; width: 100%;
+      padding: 88px 1.5rem 4rem;
     }
 
-    /* Cards */
+    /* ── Section label ── */
+    .sec-label {
+      font-size: 0.65rem; letter-spacing: 0.22em;
+      color: var(--green); text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    /* ── Generic card ── */
     .card {
-      background: var(--card-bg);
-      backdrop-filter: blur(12px);
-      border: 1px solid var(--primary-border);
+      background: var(--card);
+      backdrop-filter: blur(14px);
+      border: 1px solid var(--green-border);
       border-radius: 20px;
-      padding: 32px 36px;
-      margin-bottom: 28px;
-      position: relative;
-      overflow: hidden;
-      animation: fadeInUp 0.6s ease both;
+      padding: 28px 30px;
+      position: relative; overflow: hidden;
     }
+    .card + .card { margin-top: 20px; }
     .card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, rgba(0, 255, 0, 0.5), transparent);
+      content: ''; position: absolute;
+      top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(0,255,0,0.45), transparent);
     }
 
-    .section-label {
-      font-size: 0.7rem;
-      letter-spacing: 0.2em;
-      color: var(--primary);
-      text-transform: uppercase;
-      margin-bottom: 0.5rem;
+    /* ── Hero ── */
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 32px;
+      align-items: center;
     }
-    .card-title {
-      font-family: 'Orbitron', monospace;
+    .hero-title {
+      font-family: var(--font-display);
       font-weight: 900;
-      font-size: 1.6rem;
+      font-size: clamp(1.8rem, 4vw, 3rem);
       color: var(--white);
-      margin-bottom: 0.5rem;
+      line-height: 1.2;
+      margin: 8px 0 12px;
     }
-    .card-desc {
-      font-size: 0.8rem;
-      color: var(--gray-400);
-      line-height: 1.6;
-      margin-bottom: 1.5rem;
+    .hero-title span { color: var(--green); }
+    .hero-desc {
+      font-size: 0.82rem; color: var(--muted);
+      line-height: 1.7; max-width: 520px;
     }
-
-    /* Feature pills */
-    .feature-pills {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 16px;
-    }
+    .pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
     .pill {
       padding: 4px 14px;
-      border: 1px solid var(--primary-border);
-      border-radius: 20px;
-      font-size: 0.7rem;
-      color: var(--gray-400);
-      font-family: 'JetBrains Mono', monospace;
+      border: 1px solid var(--green-border);
+      border-radius: 20px; font-size: 0.66rem;
+      color: var(--muted);
     }
+    .pill.active { color: var(--green); border-color: var(--green-dim); background: var(--green-dim); }
+    .hero-stats {
+      display: flex; flex-direction: column; gap: 12px; align-items: flex-end;
+    }
+    .stat-box {
+      background: rgba(0,255,0,0.04);
+      border: 1px solid var(--green-border);
+      border-radius: 14px; padding: 14px 20px;
+      text-align: center; min-width: 110px;
+    }
+    .stat-num {
+      font-family: var(--font-display); font-weight: 900;
+      font-size: 1.4rem; color: var(--green);
+    }
+    .stat-lbl { font-size: 0.6rem; color: var(--faint); margin-top: 2px; }
 
-    /* Token display */
-    .token-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 16px;
+    /* ── Feature cards row ── */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 14px;
+      margin-top: 20px;
     }
-    .token-status {
-      display: flex;
-      align-items: center;
-      gap: 8px;
+    .feat-card {
+      background: rgba(0,255,0,0.03);
+      border: 1px solid var(--green-border);
+      border-radius: 16px; padding: 18px 20px;
+      transition: all 0.2s;
     }
+    .feat-card:hover {
+      border-color: var(--green-border-h);
+      background: rgba(0,255,0,0.06);
+      transform: translateY(-2px);
+    }
+    .feat-icon { font-size: 1.4rem; margin-bottom: 10px; }
+    .feat-title { font-size: 0.75rem; color: var(--white); font-weight: 700; margin-bottom: 4px; }
+    .feat-desc { font-size: 0.65rem; color: var(--faint); line-height: 1.5; }
+
+    /* ── Token card ── */
+    .token-bar {
+      display: flex; flex-wrap: wrap; align-items: center;
+      justify-content: space-between; gap: 12px; margin-bottom: 14px;
+    }
+    .token-status { display: flex; align-items: center; gap: 8px; }
     .pulse-dot {
-      width: 8px;
-      height: 8px;
-      background: var(--primary);
-      border-radius: 50%;
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 6px var(--green);
       animation: pulseGreen 1.5s infinite;
-      box-shadow: 0 0 6px var(--primary);
     }
-    @keyframes pulseGreen {
-      0%, 100% { opacity: 0.4; transform: scale(0.8); }
-      50% { opacity: 1; transform: scale(1.2); }
+    .token-lbl { font-size: 0.72rem; color: var(--text); }
+    .token-box {
+      background: rgba(0,0,0,0.65);
+      border: 1px solid var(--green-border);
+      border-radius: 10px; padding: 12px 16px;
+      font-size: 0.7rem; color: var(--green);
+      word-break: break-all; line-height: 1.5;
+      margin: 12px 0; min-height: 44px;
     }
-    .token-value {
-      background: rgba(0, 0, 0, 0.6);
-      border: 1px solid var(--primary-border);
-      border-radius: 10px;
-      padding: 12px 16px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.75rem;
-      word-break: break-all;
-      color: var(--primary);
-      margin: 12px 0;
-    }
-    .token-expiry {
-      font-size: 0.7rem;
-      color: var(--gray-500);
-    }
-
-    /* Form elements */
-    .input-label {
-      font-size: 0.72rem;
-      color: var(--gray-400);
-      margin-bottom: 6px;
-      display: block;
-    }
-    .input-field, .input-field-sm, select {
-      background: rgba(0, 0, 0, 0.6);
-      border: 1px solid var(--primary-border);
-      border-radius: 10px;
-      padding: 11px 14px;
-      color: var(--primary);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.85rem;
-      outline: none;
-      transition: all 0.2s;
-    }
-    .input-field:focus, .input-field-sm:focus, select:focus {
-      border-color: var(--primary-border-hover);
-      box-shadow: 0 0 0 3px rgba(0, 255, 0, 0.08);
-    }
-    .input-field::placeholder {
-      color: rgba(0, 255, 0, 0.3);
-    }
-    .search-group {
-      display: flex;
-      flex-wrap: wrap;
+    .token-footer {
+      display: flex; flex-wrap: wrap;
+      justify-content: space-between; align-items: center;
       gap: 12px;
-      margin-bottom: 20px;
     }
-    .search-group .input-field {
-      flex: 2;
-      min-width: 160px;
-    }
-    .search-group select, .search-group .input-field-sm {
-      flex: 1;
-      min-width: 100px;
+    .token-expiry { font-size: 0.68rem; color: var(--faint); }
+    .token-hint { margin-top: 12px; font-size: 0.68rem; color: var(--faint); }
+    .token-hint code {
+      background: #0a0a0a; padding: 2px 8px;
+      border-radius: 6px; color: var(--green);
     }
 
-    /* Buttons */
+    /* ── Buttons ── */
+    .btn {
+      font-family: var(--font-display); font-weight: 700;
+      font-size: 0.72rem; letter-spacing: 0.05em;
+      border-radius: 10px; padding: 9px 20px;
+      cursor: pointer; transition: all 0.2s;
+      display: inline-flex; align-items: center; gap: 7px;
+      white-space: nowrap;
+    }
     .btn-primary {
-      background: rgba(0, 255, 0, 0.1);
-      color: var(--primary);
-      border: 1px solid rgba(0, 255, 0, 0.3);
-      border-radius: 10px;
-      padding: 10px 20px;
-      font-family: 'Orbitron', monospace;
-      font-weight: 700;
-      font-size: 0.78rem;
-      letter-spacing: 0.05em;
-      cursor: pointer;
-      transition: all 0.2s;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
+      background: rgba(0,255,0,0.1);
+      border: 1px solid rgba(0,255,0,0.35);
+      color: var(--green);
     }
     .btn-primary:hover {
-      background: rgba(0, 255, 0, 0.18);
+      background: rgba(0,255,0,0.2);
+      box-shadow: var(--green-glow);
       transform: translateY(-1px);
-      box-shadow: var(--primary-glow);
     }
-    .btn-outline {
+    .btn-ghost {
       background: transparent;
-      border: 1px solid var(--primary-border);
-      color: var(--gray-400);
+      border: 1px solid var(--green-border);
+      color: var(--muted);
     }
-    .btn-outline:hover {
-      background: rgba(0, 255, 0, 0.08);
-      color: var(--primary);
-      border-color: var(--primary-border-hover);
+    .btn-ghost:hover {
+      border-color: var(--green-border-h);
+      color: var(--green);
+      background: rgba(0,255,0,0.05);
     }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
 
-    /* Endpoint grid */
-    .endpoint-grid {
+    /* ── Search playground ── */
+    .search-row {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 14px;
-      margin: 20px 0;
+      grid-template-columns: 1fr 120px 80px auto;
+      gap: 10px; margin-bottom: 18px;
     }
-    .endpoint-card {
-      background: rgba(0, 0, 0, 0.5);
-      border: 1px solid var(--primary-border);
-      border-radius: 14px;
-      padding: 16px 18px;
-      cursor: pointer;
-      transition: all 0.2s;
+    input, select {
+      background: rgba(0,0,0,0.65);
+      border: 1px solid var(--green-border);
+      border-radius: 10px; padding: 10px 14px;
+      color: var(--green); font-family: var(--font-mono);
+      font-size: 0.82rem; outline: none;
+      transition: all 0.2s; width: 100%;
     }
-    .endpoint-card:hover {
-      border-color: var(--primary-border-hover);
+    input::placeholder { color: rgba(0,255,0,0.3); }
+    input:focus, select:focus {
+      border-color: var(--green-border-h);
+      box-shadow: 0 0 0 3px rgba(0,255,0,0.07);
+    }
+    select option { background: #111; }
+
+    /* ── Result box ── */
+    .result-box {
+      background: rgba(0,0,0,0.7);
+      border: 1px solid var(--green-border);
+      border-radius: 12px; padding: 16px 18px;
+      font-family: var(--font-mono); font-size: 0.68rem;
+      color: #a0f0a0; white-space: pre-wrap;
+      word-break: break-all; overflow-x: auto;
+      max-height: 380px; display: none; margin-top: 16px;
+      line-height: 1.6;
+    }
+    .result-box.visible { display: block; }
+    .result-box.error { color: var(--red); border-color: rgba(255,77,77,0.3); }
+
+    /* ── Endpoint grid ── */
+    .ep-section-title {
+      font-family: var(--font-display); font-weight: 700;
+      font-size: 0.75rem; color: var(--white);
+      margin-bottom: 16px; letter-spacing: 0.08em;
+    }
+    .ep-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 12px;
+    }
+    .ep-card {
+      background: rgba(0,0,0,0.55);
+      border: 1px solid var(--green-border);
+      border-radius: 14px; padding: 16px 18px;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .ep-card:hover {
+      border-color: var(--green-border-h);
+      background: var(--card-h);
       transform: translateY(-2px);
-      background: rgba(0, 255, 0, 0.03);
-      box-shadow: 0 0 12px rgba(0, 255, 0, 0.1);
+      box-shadow: 0 4px 18px rgba(0,255,0,0.08);
     }
     .ep-method {
-      font-size: 0.6rem;
-      font-weight: 700;
-      background: rgba(0, 255, 0, 0.15);
-      color: var(--primary);
-      border-radius: 4px;
-      padding: 2px 8px;
-      display: inline-block;
-      margin-bottom: 8px;
-      font-family: 'JetBrains Mono', monospace;
+      display: inline-block; font-size: 0.58rem; font-weight: 700;
+      background: rgba(0,255,0,0.14); color: var(--green);
+      border-radius: 5px; padding: 2px 9px;
+      margin-bottom: 8px; letter-spacing: 0.08em;
     }
-    .ep-path {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.8rem;
-      color: var(--white);
-      margin-bottom: 4px;
-    }
-    .ep-desc {
-      font-size: 0.7rem;
-      color: var(--gray-500);
-      margin-top: 6px;
-    }
+    .ep-path { font-size: 0.78rem; color: var(--white); margin-bottom: 5px; }
+    .ep-desc { font-size: 0.66rem; color: var(--faint); }
 
-    /* Result box */
-    .result-box {
-      background: rgba(0, 0, 0, 0.6);
-      border: 1px solid var(--primary-border);
-      border-radius: 12px;
-      padding: 18px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.7rem;
-      color: #a0f0a0;
-      white-space: pre-wrap;
-      word-break: break-all;
-      overflow-x: auto;
-      max-height: 400px;
-      display: none;
-      margin-top: 16px;
+    .quick-preview {
+      margin-top: 14px; padding: 18px 22px;
     }
-    .result-box.visible {
-      display: block;
-    }
-    .result-box.error {
-      color: #ff4d4d;
-      border-color: #ff4d4d33;
-    }
+    .quick-hint { font-size: 0.68rem; color: var(--faint); margin-bottom: 10px; }
 
-    /* Accordion docs */
+    /* ── Docs accordion ── */
     .doc-item {
-      background: rgba(0, 0, 0, 0.3);
-      border: 1px solid var(--primary-border);
-      border-radius: 14px;
-      margin-bottom: 10px;
+      background: rgba(0,0,0,0.4);
+      border: 1px solid var(--green-border);
+      border-radius: 14px; margin-bottom: 10px;
       overflow: hidden;
     }
     .doc-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 14px 20px;
-      cursor: pointer;
+      display: flex; align-items: center; gap: 12px;
+      padding: 13px 20px; cursor: pointer;
       transition: background 0.2s;
     }
-    .doc-header:hover {
-      background: rgba(0, 255, 0, 0.03);
+    .doc-header:hover { background: rgba(0,255,0,0.03); }
+    .doc-m {
+      font-size: 0.62rem; font-weight: 700;
+      background: rgba(0,255,0,0.14); color: var(--green);
+      padding: 2px 10px; border-radius: 20px; flex-shrink: 0;
     }
-    .doc-method {
-      font-size: 0.65rem;
-      font-weight: 700;
-      background: rgba(0, 255, 0, 0.15);
-      color: var(--primary);
-      padding: 2px 10px;
-      border-radius: 20px;
-    }
-    .doc-path {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.8rem;
-      color: var(--white);
-      flex: 1;
-    }
-    .doc-chevron {
-      color: var(--gray-500);
-      transition: transform 0.2s;
-      font-size: 0.7rem;
-    }
-    .doc-item.open .doc-chevron {
-      transform: rotate(90deg);
-    }
+    .doc-path { font-size: 0.78rem; color: var(--white); flex: 1; }
+    .doc-desc { font-size: 0.66rem; color: var(--faint); }
+    .doc-arrow { color: var(--faint); transition: transform 0.22s; font-size: 0.7rem; flex-shrink: 0; }
+    .doc-item.open .doc-arrow { transform: rotate(90deg); }
     .doc-body {
-      display: none;
-      padding: 0 20px 20px 20px;
-      border-top: 1px solid var(--primary-border);
+      display: none; padding: 0 20px 20px;
+      border-top: 1px solid var(--green-border);
+      font-size: 0.73rem; color: var(--muted); line-height: 1.7;
     }
-    .doc-item.open .doc-body {
-      display: block;
-    }
+    .doc-item.open .doc-body { display: block; }
+    .doc-param { color: var(--green); }
     .code-block {
-      background: #0a0a0a;
-      border: 1px solid var(--primary-border);
-      border-radius: 10px;
-      padding: 12px 16px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.7rem;
-      color: #b0ffb0;
-      margin: 12px 0;
-      white-space: pre-wrap;
-      position: relative;
+      background: #080808; border: 1px solid var(--green-border);
+      border-radius: 10px; padding: 11px 14px;
+      font-family: var(--font-mono); font-size: 0.68rem;
+      color: #b0ffb0; margin: 10px 0;
+      white-space: pre-wrap; position: relative;
     }
     .copy-btn {
-      position: absolute;
-      top: 8px;
-      right: 10px;
-      background: rgba(0, 255, 0, 0.1);
-      border: 1px solid var(--primary-border);
-      border-radius: 6px;
-      padding: 2px 10px;
-      font-size: 0.6rem;
-      color: var(--gray-400);
-      cursor: pointer;
-      transition: all 0.2s;
+      position: absolute; top: 7px; right: 9px;
+      background: rgba(0,255,0,0.1); border: 1px solid var(--green-border);
+      border-radius: 6px; padding: 2px 10px;
+      font-size: 0.58rem; color: var(--muted);
+      cursor: pointer; transition: all 0.2s; font-family: var(--font-mono);
     }
-    .copy-btn:hover {
-      color: var(--primary);
-      border-color: var(--primary);
-    }
+    .copy-btn:hover { color: var(--green); border-color: var(--green); }
+    .params-table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 0.68rem; }
+    .params-table th { text-align: left; color: var(--faint); padding: 4px 10px 6px; border-bottom: 1px solid var(--green-border); }
+    .params-table td { padding: 6px 10px; border-bottom: 1px solid rgba(0,255,0,0.06); vertical-align: top; }
+    .badge-req { color: #ff9966; font-size: 0.6rem; }
+    .badge-opt { color: var(--faint); font-size: 0.6rem; }
 
-    /* Divider */
-    .divider {
-      height: 1px;
-      background: rgba(0, 255, 0, 0.08);
-      margin: 20px 0;
-    }
-
+    /* ── Footer ── */
     footer {
-      position: relative;
-      z-index: 10;
-      border-top: 1px solid rgba(0, 255, 0, 0.1);
-      background: rgba(0, 0, 0, 0.5);
-      padding: 1.5rem;
-      text-align: center;
+      position: relative; z-index: 10;
+      border-top: 1px solid rgba(0,255,0,0.1);
+      background: rgba(0,0,0,0.6);
+      padding: 1.4rem 1.5rem; text-align: center;
     }
-    .footer-copy {
-      font-size: 0.7rem;
-      color: var(--gray-500);
-    }
+    .footer-copy { font-size: 0.68rem; color: var(--faint); }
 
+    /* ── Animations ── */
     @keyframes glowPulse {
-      0%, 100% { box-shadow: 0 0 10px rgba(0, 255, 0, 0.15); }
-      50% { box-shadow: 0 0 24px rgba(0, 255, 0, 0.3); }
+      0%,100% { box-shadow: 0 0 8px rgba(0,255,0,0.12); }
+      50% { box-shadow: 0 0 22px rgba(0,255,0,0.28); }
     }
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
+    @keyframes pulseGreen {
+      0%,100% { opacity: 0.4; transform: scale(0.8); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
       to { opacity: 1; transform: translateY(0); }
     }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .anim-1 { animation: fadeUp 0.5s ease both; }
+    .anim-2 { animation: fadeUp 0.5s 0.1s ease both; }
+    .anim-3 { animation: fadeUp 0.5s 0.2s ease both; }
+    .anim-4 { animation: fadeUp 0.5s 0.3s ease both; }
+    .anim-5 { animation: fadeUp 0.5s 0.4s ease both; }
 
-    @media (max-width: 700px) {
-      .card { padding: 24px 20px; }
-      .nav-inner { flex-wrap: wrap; height: auto; padding: 12px 1.5rem; gap: 12px; }
-      .nav-links { order: 3; width: 100%; justify-content: center; }
-      .page { padding-top: 100px; }
+    /* ── Divider ── */
+    .divider { height: 1px; background: rgba(0,255,0,0.07); margin: 28px 0; }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .hero-grid { grid-template-columns: 1fr; }
+      .hero-stats { flex-direction: row; align-items: flex-start; justify-content: flex-start; }
+      .search-row { grid-template-columns: 1fr 1fr; }
+      .search-row .btn { grid-column: span 2; justify-content: center; }
+    }
+
+    @media (max-width: 640px) {
+      .nav-inner { height: auto; padding: 12px 1.2rem; flex-wrap: wrap; }
+      .nav-links { display: none; width: 100%; flex-direction: column; align-items: center; gap: 10px; padding: 10px 0; }
+      .nav-links.open { display: flex; }
+      .nav-hamburger { display: block; }
+      .nav-badge { display: none; }
+      .page { padding: 100px 1rem 3rem; }
+      .card { padding: 20px 18px; }
+      .hero-title { font-size: 1.7rem; }
+      .hero-stats { flex-wrap: wrap; gap: 10px; }
+      .stat-box { min-width: 90px; padding: 10px 14px; }
+      .feature-grid { grid-template-columns: 1fr 1fr; }
+      .search-row { grid-template-columns: 1fr; }
+      .search-row .btn { justify-content: center; }
+      .ep-grid { grid-template-columns: 1fr; }
+      .doc-header { flex-wrap: wrap; gap: 6px; }
+      .doc-desc { display: none; }
+    }
+
+    @media (max-width: 360px) {
+      .feature-grid { grid-template-columns: 1fr; }
+      .hero-title { font-size: 1.4rem; }
     }
   </style>
 </head>
 <body>
-  <div class="neon-bg"></div>
+<div class="neon-bg"></div>
 
-  <nav>
-    <div class="nav-inner">
-      <div class="logo">
-        <div class="logo-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#00ff00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-          </svg>
+<nav>
+  <div class="nav-inner">
+    <div class="logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#00ff00" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2C8.5 5 4 8 4 13a8 8 0 0016 0c0-5-4.5-8-8-11z"/>
+          <circle cx="12" cy="14" r="2.5" fill="#00ff00" stroke="none"/>
+        </svg>
+      </div>
+      <div>
+        <div class="logo-text"><span class="logo-wolf">WOLF</span><span class="logo-rest"> TECH</span></div>
+        <div class="logo-sub">SILENT WOLF · AUDIO API</div>
+      </div>
+    </div>
+    <button class="nav-hamburger" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">☰</button>
+    <div class="nav-links">
+      <a href="#features">FEATURES</a>
+      <a href="#token">TOKEN</a>
+      <a href="#playground">TRY IT</a>
+      <a href="#endpoints">ENDPOINTS</a>
+      <a href="#docs">DOCS</a>
+    </div>
+    <span class="nav-badge">⚡ FREE · NO KEYS</span>
+  </div>
+</nav>
+
+<main class="page">
+
+  <!-- ── Hero ── -->
+  <div class="card anim-1" style="margin-bottom:20px;">
+    <div class="hero-grid">
+      <div>
+        <p class="sec-label">// WOLF TECH · SILENT WOLF API v2.0</p>
+        <h1 class="hero-title">Spotify Data.<br><span>Zero Credentials.</span></h1>
+        <p class="hero-desc">Access the full Spotify catalogue — tracks, albums, artists and playlists — completely free. No developer account, no API keys, no sign-up. Built by <strong style="color:var(--green)">WOLF TECH</strong>.</p>
+        <div class="pills">
+          <span class="pill active">✓ No API Key</span>
+          <span class="pill active">✓ No Sign Up</span>
+          <span class="pill active">✓ CORS Enabled</span>
+          <span class="pill active">✓ Real-time Token</span>
+          <span class="pill">Node.js · Express</span>
+          <span class="pill">Anonymous TOTP</span>
         </div>
-        <div>
-          <div class="logo-text"><span class="logo-wolf">WOLF</span><span class="logo-bot"> TRACK</span></div>
-          <div class="logo-sub">SILENT WOLF · AUDIO CORE</div>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-box">
+          <div class="stat-num">8</div>
+          <div class="stat-lbl">ENDPOINTS</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num">0</div>
+          <div class="stat-lbl">API KEYS</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num" id="heroUptime">—</div>
+          <div class="stat-lbl">UPTIME</div>
         </div>
       </div>
-      <div class="nav-links">
-        <a href="#token">TOKEN</a>
-        <a href="#playground">TRY</a>
-        <a href="#endpoints">ENDPOINTS</a>
-        <a href="#docs">DOCS</a>
-      </div>
-      <span class="badge">⚡ UNLIMITED · NO KEYS</span>
     </div>
-  </nav>
+  </div>
 
-  <main class="page">
-    <!-- Hero -->
-    <div class="card">
-      <p class="section-label">// WOLF AUDIO ENGINE v2.0</p>
-      <h1 class="card-title">Spotify API.<br><span style="color: var(--primary);">Zero Credentials.</span></h1>
-      <p class="card-desc">Access Spotify's full catalogue — tracks, albums, artists and playlists — completely free, no setup required. Built by SILENT WOLF.</p>
-      <div class="feature-pills">
-        <span class="pill">✓ No API Key</span>
-        <span class="pill">✓ No Sign Up</span>
-        <span class="pill">✓ No Rate Limit</span>
-        <span class="pill">✓ CORS Enabled</span>
-        <span class="pill">✓ Real-time Token</span>
+  <!-- ── Feature cards ── -->
+  <div id="features" style="margin-bottom:20px;" class="anim-2">
+    <p class="sec-label">// WHY WOLF TECH?</p>
+    <div class="feature-grid">
+      <div class="feat-card">
+        <div class="feat-icon">🔑</div>
+        <div class="feat-title">Zero Auth</div>
+        <div class="feat-desc">No Spotify account or developer credentials required. Ever.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">⚡</div>
+        <div class="feat-title">Live Tokens</div>
+        <div class="feat-desc">TOTP-generated anonymous access tokens, auto-refreshed every 30 min.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🌐</div>
+        <div class="feat-title">CORS Ready</div>
+        <div class="feat-desc">Call directly from any browser or frontend app with zero config.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🎵</div>
+        <div class="feat-title">Full Catalogue</div>
+        <div class="feat-desc">Tracks, albums, artists, playlists — search or fetch by ID.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🔍</div>
+        <div class="feat-title">Smart Search</div>
+        <div class="feat-desc">Cached GraphQL queries with fast, paginated results.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🛡️</div>
+        <div class="feat-title">Open Source</div>
+        <div class="feat-desc">Transparent, community-driven codebase. No hidden limits.</div>
       </div>
     </div>
+  </div>
 
-    <!-- Live Token -->
-    <div id="token"></div>
-    <div class="card">
-      <p class="section-label">// LIVE ACCESS TOKEN</p>
-      <div class="token-row">
-        <div class="token-status">
-          <div class="pulse-dot"></div>
-          <span style="font-size:0.75rem;">wolf::active_session</span>
-        </div>
-        <button class="btn-primary btn-outline" id="refreshTokenBtn" style="padding:5px 14px;" onclick="fetchWolfToken()">⟳ Refresh</button>
+  <!-- ── Live Token ── -->
+  <div id="token" class="card anim-3" style="margin-bottom:20px;">
+    <p class="sec-label">// LIVE ACCESS TOKEN</p>
+    <div class="token-bar">
+      <div class="token-status">
+        <div class="pulse-dot"></div>
+        <span class="token-lbl">wolf::active_session</span>
       </div>
-      <div class="token-value" id="wolfTokenDisplay">Fetching token...</div>
-      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
-        <span class="token-expiry" id="tokenExpiryWolf">—</span>
-        <button class="btn-primary" id="copyTokenBtn" onclick="copyWolfToken()" disabled style="padding:6px 18px;">📋 Copy Token</button>
+      <button class="btn btn-ghost" id="refreshBtn" onclick="fetchToken()" style="padding:5px 14px; font-size:0.68rem;">⟳ Refresh</button>
+    </div>
+    <div class="token-box" id="tokenDisplay">Fetching token...</div>
+    <div class="token-footer">
+      <span class="token-expiry" id="tokenExpiry">—</span>
+      <button class="btn btn-primary" id="copyTokenBtn" onclick="copyToken()" disabled>📋 Copy Token</button>
+    </div>
+    <p class="token-hint">Use: <code>Authorization: Bearer {token}</code></p>
+  </div>
+
+  <!-- ── Search Playground ── -->
+  <div id="playground" class="card anim-4" style="margin-bottom:20px;">
+    <p class="sec-label">// LIVE SEARCH PLAYGROUND</p>
+    <div class="search-row">
+      <input type="text" id="searchQ" placeholder="Search for music..." value="Blinding Lights" />
+      <select id="searchType">
+        <option value="track">Track</option>
+        <option value="album">Album</option>
+        <option value="artist">Artist</option>
+        <option value="playlist">Playlist</option>
+      </select>
+      <input type="number" id="searchLimit" placeholder="Limit" value="5" min="1" max="50" />
+      <button class="btn btn-primary" id="searchBtn">🔍 SEARCH</button>
+    </div>
+    <pre id="searchResult" class="result-box"></pre>
+  </div>
+
+  <!-- ── Endpoints ── -->
+  <div id="endpoints" class="card anim-5" style="margin-bottom:20px;">
+    <p class="sec-label">// AVAILABLE ENDPOINTS</p>
+    <p class="ep-section-title">Click any card to preview the response</p>
+    <div class="ep-grid">
+      <div class="ep-card" onclick="quickCall('/api/token','quickResult')">
+        <div class="ep-method">GET</div>
+        <div class="ep-path">/api/token</div>
+        <div class="ep-desc">Live Spotify access token</div>
       </div>
-      <div style="margin-top: 12px; font-size:0.7rem; color: var(--gray-500);">Use: <code style="background:#0a0a0a; padding:2px 8px; border-radius:6px;">Authorization: Bearer {token}</code></div>
-    </div>
-
-    <!-- Search Playground -->
-    <div id="playground"></div>
-    <div class="card">
-      <p class="section-label">// LIVE SEARCH</p>
-      <div class="search-group">
-        <input type="text" id="searchQ" class="input-field" placeholder="Search query..." value="Blinding Lights">
-        <select id="searchType" class="input-field-sm">
-          <option value="track">Track</option>
-          <option value="album">Album</option>
-          <option value="artist">Artist</option>
-          <option value="playlist">Playlist</option>
-        </select>
-        <input type="number" id="searchLimit" class="input-field-sm" placeholder="Limit" value="5" min="1" max="50" style="max-width:90px;">
-        <button class="btn-primary" id="searchBtn">🔍 SEARCH</button>
+      <div class="ep-card" onclick="quickCall('/api/health','quickResult')">
+        <div class="ep-method">GET</div>
+        <div class="ep-path">/api/health</div>
+        <div class="ep-desc">API health &amp; uptime</div>
       </div>
-      <pre id="searchResult" class="result-box"></pre>
+      <div class="ep-card" onclick="quickCall('/api/search?q=Weeknd&type=track&limit=3','quickResult')">
+        <div class="ep-method">GET</div>
+        <div class="ep-path">/api/search</div>
+        <div class="ep-desc">Search tracks / albums / artists / playlists</div>
+      </div>
+      <div class="ep-card" onclick="quickCall('/api/track/4iV5W9uYEdYUVa79Axb7Rh','quickResult')">
+        <div class="ep-method">GET</div>
+        <div class="ep-path">/api/track/:id</div>
+        <div class="ep-desc">Track details by Spotify ID</div>
+      </div>
+      <div class="ep-card" onclick="quickCall('/api/album/4aawyAB9vmqN3uQ7FjRGTy','quickResult')">
+        <div class="ep-method">GET</div>
+        <div class="ep-path">/api/album/:id</div>
+        <div class="ep-desc">Album details + full tracklist</div>
+      </div>
+      <div class="ep-card" onclick="quickCall('/api/artist/1dfeR4HaWDbWqFHLkxsg1d','quickResult')">
+        <div class="ep-method">GET</div>
+        <div class="ep-path">/api/artist/:id</div>
+        <div class="ep-desc">Artist profile &amp; metadata</div>
+      </div>
+      <div class="ep-card" onclick="quickCall('/api/artist/1dfeR4HaWDbWqFHLkxsg1d/top-tracks','quickResult')">
+        <div class="ep-method">GET</div>
+        <div class="ep-path">/api/artist/:id/top-tracks</div>
+        <div class="ep-desc">Artist top tracks</div>
+      </div>
+      <div class="ep-card" onclick="quickCall('/api/playlist/37i9dQZF1DXcBWIGoYBM5M','quickResult')">
+        <div class="ep-method">GET</div>
+        <div class="ep-path">/api/playlist/:id</div>
+        <div class="ep-desc">Playlist info + tracks</div>
+      </div>
     </div>
-
-    <!-- Endpoint Cards -->
-    <div id="endpoints"></div>
-    <p class="section-label" style="margin-bottom: 16px;">// AVAILABLE ENDPOINTS</p>
-    <div class="endpoint-grid">
-      <div class="endpoint-card" onclick="quickCall('/api/token', 'quickResult')"><div class="ep-method">GET</div><div class="ep-path">/api/token</div><div class="ep-desc">Get Spotify access token</div></div>
-      <div class="endpoint-card" onclick="quickCall('/api/health', 'quickResult')"><div class="ep-method">GET</div><div class="ep-path">/api/health</div><div class="ep-desc">API health check</div></div>
-      <div class="endpoint-card" onclick="quickCall('/api/search?q=Weeknd&type=track&limit=4', 'quickResult')"><div class="ep-method">GET</div><div class="ep-path">/api/search</div><div class="ep-desc">Search tracks/albums/artists</div></div>
-      <div class="endpoint-card" onclick="quickCall('/api/track/4iV5W9uYEdYUVa79Axb7Rh', 'quickResult')"><div class="ep-method">GET</div><div class="ep-path">/api/track/:id</div><div class="ep-desc">Track by Spotify ID</div></div>
-      <div class="endpoint-card" onclick="quickCall('/api/album/4aawyAB9vmqN3uQ7FjRGTy', 'quickResult')"><div class="ep-method">GET</div><div class="ep-path">/api/album/:id</div><div class="ep-desc">Album details + tracks</div></div>
-      <div class="endpoint-card" onclick="quickCall('/api/artist/1dfeR4HaWDbWqFHLkxsg1d', 'quickResult')"><div class="ep-method">GET</div><div class="ep-path">/api/artist/:id</div><div class="ep-desc">Artist profile</div></div>
-      <div class="endpoint-card" onclick="quickCall('/api/playlist/37i9dQZF1DXcBWIGoYBM5M', 'quickResult')"><div class="ep-method">GET</div><div class="ep-path">/api/playlist/:id</div><div class="ep-desc">Playlist tracks</div></div>
-      <div class="endpoint-card" onclick="quickCall('/api/artist/1dfeR4HaWDbWqFHLkxsg1d/top-tracks?market=US', 'quickResult')"><div class="ep-method">GET</div><div class="ep-path">/api/artist/:id/top-tracks</div><div class="ep-desc">Top tracks by market</div></div>
-    </div>
-
-    <!-- Quick result preview -->
-    <div class="card" style="padding: 24px;">
-      <p style="font-size:0.7rem; color: var(--gray-500); margin-bottom: 12px;">⚡ Click any endpoint above to preview response</p>
+    <div class="quick-preview card" style="margin-top:16px; padding:18px 22px;">
+      <p class="quick-hint">⚡ Response preview appears here</p>
       <pre id="quickResult" class="result-box"></pre>
     </div>
+  </div>
 
-    <!-- Documentation Accordion -->
-    <div id="docs"></div>
-    <p class="section-label" style="margin: 24px 0 16px;">// DOCUMENTATION</p>
+  <div class="divider"></div>
+
+  <!-- ── Docs ── -->
+  <div id="docs">
+    <p class="sec-label" style="margin-bottom:16px;">// API DOCUMENTATION</p>
 
     <div class="doc-item open" id="doc-token">
-      <div class="doc-header" onclick="toggleDoc('doc-token')"><span class="doc-method">GET</span><span class="doc-path">/api/token</span><span class="doc-chevron">▶</span></div>
-      <div class="doc-body"><p style="color: var(--gray-400); font-size:0.75rem;">Returns a live Spotify access token valid for ~1 hour.</p><div class="code-block">GET /api/token<button class="copy-btn" onclick="copyCode(this)">Copy</button></div><div class="code-block">{"success": true, "access_token": "BQ...", "token_type": "Bearer"}<button class="copy-btn" onclick="copyCode(this)">Copy</button></div></div>
+      <div class="doc-header" onclick="toggleDoc('doc-token')">
+        <span class="doc-m">GET</span>
+        <span class="doc-path">/api/token</span>
+        <span class="doc-desc">Returns a live Spotify access token</span>
+        <span class="doc-arrow">▶</span>
+      </div>
+      <div class="doc-body">
+        <p>Returns an anonymous Spotify web-player token valid for ~1 hour. Use as a Bearer token for direct Spotify API calls.</p>
+        <div class="code-block">GET /api/token<button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <div class="code-block">{"provider":"WOLF TECH","creator":"Silent Wolf","success":true,"access_token":"BQ...","token_type":"Bearer"}<button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      </div>
     </div>
+
     <div class="doc-item" id="doc-search">
-      <div class="doc-header" onclick="toggleDoc('doc-search')"><span class="doc-method">GET</span><span class="doc-path">/api/search?q=...&type=...&limit=...</span><span class="doc-chevron">▶</span></div>
-      <div class="doc-body"><p style="color: var(--gray-400); font-size:0.75rem;">Parameters: <code>q</code> (required), <code>type</code> (track/album/artist/playlist), <code>limit</code> (max 50), <code>offset</code>.</p><div class="code-block">GET /api/search?q=Drake&type=artist&limit=3<button class="copy-btn" onclick="copyCode(this)">Copy</button></div></div>
+      <div class="doc-header" onclick="toggleDoc('doc-search')">
+        <span class="doc-m">GET</span>
+        <span class="doc-path">/api/search</span>
+        <span class="doc-desc">Search the Spotify catalogue</span>
+        <span class="doc-arrow">▶</span>
+      </div>
+      <div class="doc-body">
+        <table class="params-table">
+          <tr><th>Param</th><th>Type</th><th>Default</th><th>Notes</th></tr>
+          <tr><td><span class="doc-param">q</span></td><td>string</td><td>—</td><td><span class="badge-req">required</span> — search query</td></tr>
+          <tr><td><span class="doc-param">type</span></td><td>string</td><td>track</td><td><span class="badge-opt">optional</span> — track | album | artist | playlist</td></tr>
+          <tr><td><span class="doc-param">limit</span></td><td>number</td><td>20</td><td><span class="badge-opt">optional</span> — max 50</td></tr>
+          <tr><td><span class="doc-param">offset</span></td><td>number</td><td>0</td><td><span class="badge-opt">optional</span> — pagination</td></tr>
+        </table>
+        <div class="code-block">GET /api/search?q=Drake&type=artist&limit=3<button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      </div>
     </div>
+
     <div class="doc-item" id="doc-track">
-      <div class="doc-header" onclick="toggleDoc('doc-track')"><span class="doc-method">GET</span><span class="doc-path">/api/track/:spotify_id</span><span class="doc-chevron">▶</span></div>
-      <div class="doc-body"><div class="code-block">GET /api/track/4iV5W9uYEdYUVa79Axb7Rh<button class="copy-btn" onclick="copyCode(this)">Copy</button></div></div>
+      <div class="doc-header" onclick="toggleDoc('doc-track')">
+        <span class="doc-m">GET</span>
+        <span class="doc-path">/api/track/:id</span>
+        <span class="doc-desc">Track details by Spotify ID</span>
+        <span class="doc-arrow">▶</span>
+      </div>
+      <div class="doc-body">
+        <p>Returns title, artist(s), album, thumbnail, duration, release date, explicit flag, and preview URL.</p>
+        <div class="code-block">GET /api/track/4iV5W9uYEdYUVa79Axb7Rh<button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      </div>
     </div>
+
     <div class="doc-item" id="doc-album">
-      <div class="doc-header" onclick="toggleDoc('doc-album')"><span class="doc-method">GET</span><span class="doc-path">/api/album/:id</span><span class="doc-chevron">▶</span></div>
-      <div class="doc-body"><div class="code-block">GET /api/album/4aawyAB9vmqN3uQ7FjRGTy<button class="copy-btn" onclick="copyCode(this)">Copy</button></div></div>
+      <div class="doc-header" onclick="toggleDoc('doc-album')">
+        <span class="doc-m">GET</span>
+        <span class="doc-path">/api/album/:id</span>
+        <span class="doc-desc">Album details + full tracklist</span>
+        <span class="doc-arrow">▶</span>
+      </div>
+      <div class="doc-body">
+        <p>Returns album metadata and every track with duration, explicit flag, and preview URLs.</p>
+        <div class="code-block">GET /api/album/4aawyAB9vmqN3uQ7FjRGTy<button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      </div>
     </div>
+
+    <div class="doc-item" id="doc-artist">
+      <div class="doc-header" onclick="toggleDoc('doc-artist')">
+        <span class="doc-m">GET</span>
+        <span class="doc-path">/api/artist/:id</span>
+        <span class="doc-desc">Artist profile and metadata</span>
+        <span class="doc-arrow">▶</span>
+      </div>
+      <div class="doc-body">
+        <p>Returns name, thumbnail, follower count, genres, and verified status.</p>
+        <div class="code-block">GET /api/artist/1dfeR4HaWDbWqFHLkxsg1d<button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      </div>
+    </div>
+
+    <div class="doc-item" id="doc-artist-top">
+      <div class="doc-header" onclick="toggleDoc('doc-artist-top')">
+        <span class="doc-m">GET</span>
+        <span class="doc-path">/api/artist/:id/top-tracks</span>
+        <span class="doc-desc">Top tracks for an artist</span>
+        <span class="doc-arrow">▶</span>
+      </div>
+      <div class="doc-body">
+        <div class="code-block">GET /api/artist/1dfeR4HaWDbWqFHLkxsg1d/top-tracks<button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      </div>
+    </div>
+
     <div class="doc-item" id="doc-playlist">
-      <div class="doc-header" onclick="toggleDoc('doc-playlist')"><span class="doc-method">GET</span><span class="doc-path">/api/playlist/:id</span><span class="doc-chevron">▶</span></div>
-      <div class="doc-body"><div class="code-block">GET /api/playlist/37i9dQZF1DXcBWIGoYBM5M<button class="copy-btn" onclick="copyCode(this)">Copy</button></div></div>
+      <div class="doc-header" onclick="toggleDoc('doc-playlist')">
+        <span class="doc-m">GET</span>
+        <span class="doc-path">/api/playlist/:id</span>
+        <span class="doc-desc">Playlist with full track listing</span>
+        <span class="doc-arrow">▶</span>
+      </div>
+      <div class="doc-body">
+        <p>Returns playlist metadata, owner, follower count, and all tracks including duration and preview URLs.</p>
+        <div class="code-block">GET /api/playlist/37i9dQZF1DXcBWIGoYBM5M<button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      </div>
     </div>
-  </main>
 
-  <footer>
-    <div class="footer-copy">🐺 WOLF TECH · SILENT WOLF — Unlimited Music API · © 2026</div>
-  </footer>
+  </div>
+</main>
 
-  <script>
-    let currentWolfToken = '';
-    let tokenFetchTime = null;
-    let expiryInterval = null;
+<footer>
+  <div class="footer-copy">🐺 WOLF TECH · SILENT WOLF — Free Spotify Audio API · © 2026</div>
+</footer>
 
-    async function fetchWolfToken() {
-      const tokenDisplay = document.getElementById('wolfTokenDisplay');
-      const copyBtn = document.getElementById('copyTokenBtn');
-      const expirySpan = document.getElementById('tokenExpiryWolf');
-      tokenDisplay.textContent = '⟳ hunting token...';
-      copyBtn.disabled = true;
-      try {
-        const res = await fetch('/api/token');
-        const data = await res.json();
-        if (data.success && data.access_token) {
-          currentWolfToken = data.access_token;
-          tokenFetchTime = Date.now();
-          tokenDisplay.textContent = currentWolfToken;
-          copyBtn.disabled = false;
-          if (expiryInterval) clearInterval(expiryInterval);
-          updateExpiry();
-          expiryInterval = setInterval(updateExpiry, 1000);
-        } else throw new Error('token fetch failed');
-      } catch(e) {
-        tokenDisplay.textContent = '⚠️ error: ' + e.message;
-        expirySpan.textContent = 'offline';
+<script>
+  let _token = '';
+  let _tokenTime = null;
+  let _expiryTimer = null;
+
+  async function fetchToken() {
+    const display = document.getElementById('tokenDisplay');
+    const copyBtn = document.getElementById('copyTokenBtn');
+    const expiry = document.getElementById('tokenExpiry');
+    display.textContent = '⟳ fetching...';
+    copyBtn.disabled = true;
+    try {
+      const r = await fetch('/api/token');
+      const d = await r.json();
+      if (d.success && d.access_token) {
+        _token = d.access_token;
+        _tokenTime = Date.now();
+        display.textContent = _token;
+        copyBtn.disabled = false;
+        if (_expiryTimer) clearInterval(_expiryTimer);
+        tickExpiry();
+        _expiryTimer = setInterval(tickExpiry, 1000);
+      } else throw new Error(d.error || 'failed');
+    } catch(e) {
+      display.textContent = '⚠️ ' + e.message;
+      expiry.textContent = 'offline';
+    }
+  }
+
+  function tickExpiry() {
+    if (!_tokenTime) return;
+    const rem = 3600 - Math.floor((Date.now() - _tokenTime) / 1000);
+    const el = document.getElementById('tokenExpiry');
+    if (rem <= 0) { el.textContent = 'expired — click Refresh'; return; }
+    el.textContent = `⏱ expires in ${Math.floor(rem/60)}m ${rem%60}s`;
+  }
+
+  function copyToken() {
+    if (!_token) return;
+    navigator.clipboard.writeText(_token);
+    const btn = document.getElementById('copyTokenBtn');
+    btn.textContent = '✓ Copied!';
+    setTimeout(() => btn.textContent = '📋 Copy Token', 2000);
+  }
+
+  async function runSearch() {
+    const q = document.getElementById('searchQ').value.trim();
+    if (!q) return;
+    const type  = document.getElementById('searchType').value;
+    const limit = document.getElementById('searchLimit').value || 5;
+    const box   = document.getElementById('searchResult');
+    const btn   = document.getElementById('searchBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span style="display:inline-block;width:10px;height:10px;border:2px solid #0f0;border-top-color:transparent;border-radius:50%;animation:spin .6s linear infinite;margin-right:6px;"></span>SEARCHING';
+    box.classList.add('visible'); box.classList.remove('error');
+    box.textContent = 'loading...';
+    try {
+      const r = await fetch(`/api/search?q=${encodeURIComponent(q)}&type=${type}&limit=${limit}`);
+      const d = await r.json();
+      box.textContent = JSON.stringify(d, null, 2);
+      if (!r.ok) box.classList.add('error');
+    } catch(e) {
+      box.textContent = 'Request failed: ' + e.message;
+      box.classList.add('error');
+    }
+    btn.disabled = false;
+    btn.innerHTML = '🔍 SEARCH';
+  }
+
+  async function quickCall(path, boxId) {
+    const box = document.getElementById(boxId);
+    box.classList.add('visible'); box.classList.remove('error');
+    box.textContent = 'loading...';
+    // scroll to it
+    box.closest('.card, .quick-preview')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    try {
+      const r = await fetch(path);
+      const d = await r.json();
+      box.textContent = JSON.stringify(d, null, 2);
+      if (!r.ok) box.classList.add('error');
+    } catch(e) {
+      box.textContent = 'Error: ' + e.message;
+      box.classList.add('error');
+    }
+  }
+
+  function toggleDoc(id) {
+    document.getElementById(id).classList.toggle('open');
+  }
+
+  function copyCode(btn) {
+    const text = btn.parentElement.innerText.replace(/Copy$/, '').trim();
+    navigator.clipboard.writeText(text);
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 1800);
+  }
+
+  async function loadUptime() {
+    try {
+      const r = await fetch('/api/health');
+      const d = await r.json();
+      if (d.uptime_seconds !== undefined) {
+        const s = d.uptime_seconds;
+        const el = document.getElementById('heroUptime');
+        if (s < 60) el.textContent = s + 's';
+        else if (s < 3600) el.textContent = Math.floor(s/60) + 'm';
+        else el.textContent = Math.floor(s/3600) + 'h';
       }
-    }
+    } catch {}
+  }
 
-    function updateExpiry() {
-      if (!tokenFetchTime) return;
-      const elapsed = Math.floor((Date.now() - tokenFetchTime) / 1000);
-      const remaining = 3600 - elapsed;
-      const expirySpan = document.getElementById('tokenExpiryWolf');
-      if (remaining <= 0) {
-        expirySpan.textContent = 'expired — refresh';
-      } else {
-        const mins = Math.floor(remaining / 60);
-        const secs = remaining % 60;
-        expirySpan.textContent = `⏱️ expires in ${mins}m ${secs}s`;
-      }
-    }
-
-    function copyWolfToken() {
-      if (!currentWolfToken) return;
-      navigator.clipboard.writeText(currentWolfToken);
-      const btn = document.getElementById('copyTokenBtn');
-      btn.textContent = '✓ Copied!';
-      setTimeout(() => btn.textContent = '📋 Copy Token', 2000);
-    }
-
-    async function runSearch() {
-      const q = document.getElementById('searchQ').value.trim();
-      const type = document.getElementById('searchType').value;
-      const limit = document.getElementById('searchLimit').value || 5;
-      const resultBox = document.getElementById('searchResult');
-      const btn = document.getElementById('searchBtn');
-      if (!q) return;
-      btn.disabled = true;
-      btn.innerHTML = '<span style="display:inline-block;width:10px;height:10px;border:2px solid #0f0;border-top-color:transparent;border-radius:50%;animation:spin 0.6s linear infinite;margin-right:6px;"></span>SEARCHING';
-      resultBox.classList.add('visible');
-      resultBox.textContent = 'loading...';
-      try {
-        const res = await fetch(`/api/search?q=${encodeURIComponent(q)}&type=${type}&limit=${limit}`);
-        const data = await res.json();
-        resultBox.textContent = JSON.stringify(data, null, 2);
-        if (!res.ok) resultBox.classList.add('error');
-        else resultBox.classList.remove('error');
-      } catch(e) {
-        resultBox.textContent = 'Request failed: ' + e.message;
-        resultBox.classList.add('error');
-      }
-      btn.disabled = false;
-      btn.innerHTML = '🔍 SEARCH';
-    }
-
-    async function quickCall(path, boxId) {
-      const box = document.getElementById(boxId);
-      box.classList.add('visible');
-      box.textContent = 'loading...';
-      try {
-        const res = await fetch(path);
-        const data = await res.json();
-        box.textContent = JSON.stringify(data, null, 2);
-        if (!res.ok) box.classList.add('error');
-        else box.classList.remove('error');
-      } catch(e) {
-        box.textContent = 'Error: ' + e.message;
-        box.classList.add('error');
-      }
-    }
-
-    function toggleDoc(id) {
-      document.getElementById(id).classList.toggle('open');
-    }
-
-    function copyCode(btn) {
-      const parent = btn.parentElement;
-      let text = parent.innerText.replace(/Copy$/, '').trim();
-      navigator.clipboard.writeText(text);
-      btn.textContent = 'Copied!';
-      setTimeout(() => btn.textContent = 'Copy', 1800);
-    }
-
-    document.getElementById('searchBtn').addEventListener('click', runSearch);
-    document.getElementById('searchQ').addEventListener('keypress', e => { if (e.key === 'Enter') runSearch(); });
-    fetchWolfToken();
-  </script>
-  <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
+  document.getElementById('searchBtn').addEventListener('click', runSearch);
+  document.getElementById('searchQ').addEventListener('keypress', e => { if (e.key === 'Enter') runSearch(); });
+  fetchToken();
+  loadUptime();
+  setInterval(loadUptime, 30000);
+</script>
 </body>
 </html>
