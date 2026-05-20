@@ -1,8 +1,0 @@
-uploads = []
-generated = []
-
-[[outputs]]
-id = "3GRB-nhvkzPesx838RQOY"
-uri = "file://public/favicon.svg"
-type = "image"
-title = "wolfXspotify favicon (wX)"
