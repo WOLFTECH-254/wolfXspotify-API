@@ -639,6 +639,11 @@
         <div class="ep-path">/api/artist/:id/top-tracks</div>
         <div class="ep-desc">Artist top tracks</div>
       </div>
+      <div class="ep-card" onclick="quickCall('/api/artist/1dfeR4HaWDbWqFHLkxsg1d/albums?type=all&limit=10','quickResult')">
+        <div class="ep-method">GET</div>
+        <div class="ep-path">/api/artist/:id/albums</div>
+        <div class="ep-desc">Artist discography — albums, singles, compilations</div>
+      </div>
       <div class="ep-card" onclick="quickCall('/api/playlist/37i9dQZF1DXcBWIGoYBM5M','quickResult')">
         <div class="ep-method">GET</div>
         <div class="ep-path">/api/playlist/:id</div>
@@ -738,6 +743,25 @@
       </div>
       <div class="doc-body">
         <div class="code-block">GET /api/artist/1dfeR4HaWDbWqFHLkxsg1d/top-tracks<button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      </div>
+    </div>
+
+    <div class="doc-item" id="doc-artist-albums">
+      <div class="doc-header" onclick="toggleDoc('doc-artist-albums')">
+        <span class="doc-m">GET</span>
+        <span class="doc-path">/api/artist/:id/albums</span>
+        <span class="doc-desc">Full artist discography</span>
+        <span class="doc-arrow">▶</span>
+      </div>
+      <div class="doc-body">
+        <p>Returns the artist's discography. Filter by release type and paginate with limit/offset.</p>
+        <table class="params-table">
+          <tr><th>Param</th><th>Type</th><th>Default</th><th>Notes</th></tr>
+          <tr><td><span class="doc-param">type</span></td><td>string</td><td>album</td><td><span class="badge-opt">optional</span> — album | single | compilation | all</td></tr>
+          <tr><td><span class="doc-param">limit</span></td><td>number</td><td>20</td><td><span class="badge-opt">optional</span> — max 50</td></tr>
+          <tr><td><span class="doc-param">offset</span></td><td>number</td><td>0</td><td><span class="badge-opt">optional</span> — pagination</td></tr>
+        </table>
+        <div class="code-block">GET /api/artist/1dfeR4HaWDbWqFHLkxsg1d/albums?type=all&limit=10<button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
       </div>
     </div>
 

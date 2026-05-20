@@ -16,6 +16,7 @@ app.use('/api/search', require('./routes/search'));
 app.use('/api/track', require('./routes/track'));
 app.use('/api/album', require('./routes/album'));
 app.use('/api/artist', require('./routes/artist'));
+app.use('/api/artist', require('./routes/artistAlbums'));
 app.use('/api/playlist', require('./routes/playlist'));
 
 app.get('/api/token', async (req, res) => {
@@ -58,6 +59,7 @@ app.get('/api', (req, res) => {
       { method: 'GET', path: '/api/album/:id', description: 'Album details + tracklist' },
       { method: 'GET', path: '/api/artist/:id', description: 'Artist profile' },
       { method: 'GET', path: '/api/artist/:id/top-tracks', description: 'Artist top tracks' },
+      { method: 'GET', path: '/api/artist/:id/albums?type=&limit=&offset=', description: 'Artist discography (albums, singles, compilations)' },
       { method: 'GET', path: '/api/playlist/:id', description: 'Playlist with tracks' },
     ],
   });
