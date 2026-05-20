@@ -1,5 +1,7 @@
 # wolfXspotify-API
 
+[![wolfXspotify](https://i.ibb.co/xqYMYMzf/og-image.png)](https://spotify.xwolf.space)
+
 > **Free, unlimited Spotify music data API. No API key, no OAuth, no sign-up required.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
