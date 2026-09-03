@@ -42,11 +42,11 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --green: #00ff00;
-      --green-dim: rgba(0,255,0,0.18);
-      --green-border: rgba(0,255,0,0.2);
-      --green-border-h: rgba(0,255,0,0.45);
-      --green-glow: 0 0 22px rgba(0,255,0,0.28);
+      --green: #2bd985;
+      --green-dim: rgba(43,217,133,0.12);
+      --green-border: rgba(43,217,133,0.14);
+      --green-border-h: rgba(43,217,133,0.32);
+      --green-glow: 0 0 18px rgba(43,217,133,0.14);
       --bg: #000;
       --card: rgba(10,10,10,0.75);
       --card-h: rgba(0,255,0,0.03);
@@ -81,14 +81,14 @@
     .neon-bg {
       position: fixed; inset: 0; z-index: 0; pointer-events: none;
       background:
-        linear-gradient(rgba(0,255,0,0.025) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,255,0,0.025) 1px, transparent 1px);
+        linear-gradient(rgba(43,217,133,0.012) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(43,217,133,0.012) 1px, transparent 1px);
       background-size: 48px 48px;
     }
     .neon-bg::after {
       content: '';
       position: absolute; inset: 0;
-      background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(0,255,0,0.07) 0%, transparent 70%);
+      background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(43,217,133,0.035) 0%, transparent 70%);
     }
 
     /* ── Nav ── */
@@ -368,8 +368,18 @@
 
     .quick-preview {
       margin-top: 14px; padding: 18px 22px;
+      display: none;
     }
     .quick-hint { font-size: 0.68rem; color: var(--faint); margin-bottom: 10px; }
+    .inline-result {
+      display: block; margin-top: 14px; max-height: 280px;
+      font-size: 0.62rem; padding: 12px 14px;
+    }
+    .ep-card.is-loading { border-color: var(--green-border-h); box-shadow: var(--green-glow); }
+    .ep-card .ep-response-label {
+      display: block; color: var(--faint); font-size: 0.6rem;
+      margin-top: 12px; letter-spacing: 0.08em; text-transform: uppercase;
+    }
 
     /* ── Docs accordion ── */
     .doc-item {
@@ -483,6 +493,113 @@
     @media (max-width: 360px) {
       .feature-grid { grid-template-columns: 1fr; }
       .hero-title { font-size: 1.4rem; }
+    }
+
+    /* ── Endpoint tester modal ── */
+    .tester-backdrop {
+      position: fixed; inset: 0; z-index: 200; display: none;
+      align-items: center; justify-content: center; padding: 24px;
+      background: rgba(2, 6, 8, 0.78); backdrop-filter: blur(8px);
+    }
+    .tester-backdrop.open { display: flex; }
+    .tester-modal {
+      width: min(1020px, calc(100vw - 32px)); height: min(600px, calc(100vh - 32px)); overflow: hidden;
+      display: grid; grid-template-columns: minmax(320px, 0.92fr) minmax(360px, 1.08fr);
+      grid-template-rows: 56px minmax(0, 1fr);
+      background: #0c1115; border: 1px solid var(--green-border-h); border-radius: 17px;
+      box-shadow: 0 22px 80px rgba(0,0,0,0.65), 0 0 30px rgba(43,217,133,0.06);
+    }
+    .tester-header {
+      grid-column: 1 / -1; height: auto; display: flex; align-items: center; gap: 12px;
+      padding: 0 18px; border-bottom: 1px solid rgba(43,217,133,0.09); background: #10171b;
+    }
+    .tester-brand { font-family: var(--font-display); font-size: 0.78rem; font-weight: 700; color: var(--white); letter-spacing: 0.08em; }
+    .tester-brand::before { content: '>_'; color: var(--green); margin-right: 12px; }
+    .tester-tag { padding: 5px 10px; border: 1px solid var(--green-border); border-radius: 6px; color: var(--green); background: var(--green-dim); font-size: 0.62rem; }
+    .tester-close { margin-left: auto; border: 0; background: transparent; color: #78828a; font-size: 1.35rem; cursor: pointer; padding: 5px 8px; }
+    .tester-close:hover { color: var(--white); }
+    .tester-request, .tester-response { min-width: 0; min-height: 0; overflow: auto; padding: 20px 20px; }
+    .tester-request { border-right: 1px solid rgba(43,217,133,0.1); background: #12191e; }
+    .tester-response { display: flex; align-items: center; justify-content: center; background: #0a0f13; }
+    .tester-path-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+    .tester-path { color: var(--white); font-size: 0.88rem; overflow-wrap: anywhere; }
+    .tester-description { color: #7e898f; font-size: 0.68rem; line-height: 1.5; margin-bottom: 14px; }
+    .tester-label { display: block; color: #7e898f; font-size: 0.58rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin: 14px 0 7px; }
+    .tester-input { background: #111a29; border-color: rgba(43,217,133,0.16); color: #dce8e1; }
+    .tester-input::placeholder { color: #5b686f; }
+    .tester-url { display: flex; align-items: center; gap: 8px; min-width: 0; padding: 12px 14px; background: rgba(43,217,133,0.035); border: 1px solid rgba(43,217,133,0.11); border-radius: 10px; color: #6f7d82; font-size: 0.63rem; }
+    .tester-url span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .tester-copy { flex-shrink: 0; border: 0; background: transparent; color: #82908f; cursor: pointer; font-size: 1rem; }
+    .tester-copy:hover { color: var(--green); }
+    .tester-params { display: grid; gap: 12px; }
+    .tester-param-head { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; color: #68767c; font-size: 0.62rem; }
+    .tester-param-name { color: var(--green); padding: 3px 7px; border: 1px solid var(--green-border); border-radius: 5px; background: var(--green-dim); }
+    .tester-param-type { color: #78848a; }
+    .tester-execute { width: 100%; justify-content: center; margin-top: 16px; padding: 10px; background: rgba(43,125,88,0.18); border-color: rgba(43,170,112,0.42); color: #52c995; }
+    .tester-empty { text-align: center; color: #566168; font-size: 0.75rem; line-height: 1.7; }
+    .tester-empty-icon { margin: 0 auto 12px; width: 48px; height: 48px; display: grid; place-items: center; border: 1px solid rgba(43,160,115,0.13); border-radius: 12px; color: #35ad7c; font-size: 1.2rem; }
+    .tester-output { width: 100%; height: 100%; display: none; flex-direction: column; min-height: 0; }
+    .tester-output.visible { display: flex; }
+    .tester-output-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; color: #7d8b90; font-size: 0.65rem; }
+    .tester-output-bar strong { color: var(--green); font-weight: 500; }
+    .tester-json { flex: 1; min-height: 0; max-height: none; margin: 0; display: block; overflow: auto; }
+    @media (max-width: 760px) {
+      .tester-backdrop { padding: 8px; }
+      .tester-modal { width: 100%; height: calc(100vh - 16px); display: flex; flex-direction: column; }
+      .tester-header { flex-shrink: 0; }
+      .tester-request { flex: 0 0 auto; max-height: 58%; border-right: 0; border-bottom: 1px solid rgba(43,217,133,0.1); padding: 16px; }
+      .tester-response { min-height: 210px; flex: 1; padding: 16px; }
+      .tester-empty { padding: 12px 0; }
+    }
+
+    /* ── Minimal site theme ── */
+    body {
+      background: #080b0e;
+      color: #c7d0d5;
+      font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    .neon-bg { display: none; }
+    nav { background: rgba(8,11,14,0.94); border-bottom-color: #182126; backdrop-filter: blur(12px); }
+    .nav-inner { max-width: 1160px; height: 58px; }
+    .logo-icon { width: 32px; height: 32px; border-color: #26343a; animation: none; box-shadow: none; }
+    .logo-text { font-size: 0.92rem; letter-spacing: 0.1em; }
+    .logo-sub { color: #66737a; }
+    .nav-links { gap: 16px; }
+    .nav-links a { color: #77848b; font-size: 0.64rem; }
+    .nav-links a:hover { color: #62c99a; }
+    .nav-badge { border-color: #26343a; color: #62c99a; }
+    .page { max-width: 1160px; padding-top: 82px; }
+    .sec-label { color: #62c99a; letter-spacing: 0.16em; }
+    .card { background: #0d1216; border-color: #1b282e; border-radius: 13px; box-shadow: none; backdrop-filter: none; }
+    .card::before { display: none; }
+    .hero-title { font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-weight: 700; letter-spacing: -0.04em; }
+    .hero-title span { color: #62c99a; }
+    .hero-desc { color: #89959b; }
+    .pill { border-color: #253239; color: #7d8a90; }
+    .pill.active { color: #62c99a; border-color: #294b3d; background: #12251e; }
+    .stat-box, .feat-card, .ep-card, .doc-item { background: #0b1014; border-color: #1b282e; }
+    .stat-box:hover, .feat-card:hover, .ep-card:hover { border-color: #315344; box-shadow: none; transform: none; }
+    .stat-num, .token-box, .doc-param { color: #62c99a; }
+    .feat-title, .ep-path, .doc-path { color: #d4dce0; }
+    .feat-desc, .ep-desc, .quick-hint, .stat-lbl { color: #718087; }
+    .btn-primary { background: #12251e; border-color: #315344; color: #62c99a; box-shadow: none; }
+    .btn-primary:hover { background: #183127; box-shadow: none; }
+    .btn-ghost { border-color: #29363c; color: #8b979c; }
+    .btn-ghost:hover { border-color: #416653; background: #101b17; color: #62c99a; }
+    input, select { background: #0a1014; border-color: #253239; color: #c7d0d5; }
+    input:focus, select:focus { border-color: #416653; box-shadow: 0 0 0 2px rgba(98,201,154,0.08); }
+    .result-box { background: #080d10; border-color: #1d2b31; color: #a9c9b9; }
+    .ep-method, .doc-m { background: #12251e; color: #62c99a; }
+    .token-box { background: #080d10; border-color: #1d2b31; }
+    .pulse-dot { background: #62c99a; box-shadow: 0 0 5px rgba(98,201,154,0.35); }
+    .divider { background: #182126; }
+    footer { background: #080b0e; border-top-color: #182126; }
+    .anim-1, .anim-2, .anim-3, .anim-4, .anim-5 { animation: none; }
+    @media (max-width: 640px) {
+      .page { padding-top: 88px; }
+      .nav-inner { height: auto; min-height: 58px; }
+      .card { border-radius: 11px; }
+      .hero-title { letter-spacing: -0.03em; }
     }
   </style>
 </head>
@@ -625,7 +742,7 @@
   <!-- ── Endpoints ── -->
   <div id="endpoints" class="card anim-5" style="margin-bottom:20px;">
     <p class="sec-label">// AVAILABLE ENDPOINTS</p>
-    <p class="ep-section-title">Click any card to preview the response</p>
+    <p class="ep-section-title">Click an endpoint to preview its response right here</p>
     <div class="ep-grid">
       <div class="ep-card" onclick="quickCall('/api/token','quickResult')">
         <div class="ep-method">GET</div>
@@ -804,6 +921,28 @@
   </div>
 </main>
 
+<div class="tester-backdrop" id="testerBackdrop" role="dialog" aria-modal="true" aria-labelledby="testerPath">
+  <section class="tester-modal">
+    <header class="tester-header">
+      <span class="tester-brand">API TESTER</span>
+      <span class="tester-tag" id="testerTag">GET</span>
+      <button class="tester-close" onclick="closeTester()" aria-label="Close endpoint tester">×</button>
+    </header>
+    <div class="tester-request">
+      <div class="tester-path-row"><span class="ep-method" id="testerMethod">GET</span><strong class="tester-path" id="testerPath">/api/health</strong></div>
+      <p class="tester-description" id="testerDescription">Fill in the parameters and execute the request to see the response.</p>
+      <span class="tester-label">Request URL</span>
+      <div class="tester-url"><span id="testerUrl">/api/health</span><button class="tester-copy" onclick="copyTesterUrl()" aria-label="Copy request URL">▣</button></div>
+      <div id="testerParams" class="tester-params"></div>
+      <button class="btn btn-primary tester-execute" id="testerExecute" onclick="executeTesterRequest()">➤ Execute Request</button>
+    </div>
+    <div class="tester-response">
+      <div class="tester-empty" id="testerEmpty"><div class="tester-empty-icon">›_</div>Fill in parameters and tap<br><strong>Execute Request</strong> to see the response</div>
+      <div class="tester-output" id="testerOutput"><div class="tester-output-bar"><strong id="testerStatus">● Ready</strong><span id="testerTiming"></span></div><pre class="result-box tester-json" id="testerJson"></pre></div>
+    </div>
+  </section>
+</div>
+
 <footer>
   <div class="footer-copy">🐺 wolfXspotify · WOLF TECH · Silent Wolf — Free Spotify Engine · © 2026</div>
 </footer>
@@ -877,22 +1016,96 @@
     btn.innerHTML = '🔍 SEARCH';
   }
 
-  async function quickCall(path, boxId) {
-    const box = document.getElementById(boxId);
-    box.classList.add('visible'); box.classList.remove('error');
-    box.textContent = 'loading...';
-    // scroll to it
-    box.closest('.card, .quick-preview')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    try {
-      const r = await fetch(path);
-      const d = await r.json();
-      box.textContent = JSON.stringify(d, null, 2);
-      if (!r.ok) box.classList.add('error');
-    } catch(e) {
-      box.textContent = 'Error: ' + e.message;
-      box.classList.add('error');
-    }
+  const testerDefinitions = {
+    token: { path: '/api/token', description: 'Returns a live anonymous Spotify web-player access token.' },
+    health: { path: '/api/health', description: 'Check API availability, status and current uptime.' },
+    search: { path: '/api/search', description: 'Search tracks, albums, artists or playlists.', fields: [{ name: 'q', label: 'Search query', value: 'Dreams NF', required: true }, { name: 'type', label: 'Result type', type: 'select', options: ['track', 'album', 'artist', 'playlist'], value: 'track' }, { name: 'limit', label: 'Results limit', type: 'number', value: '5' }] },
+    track: { path: '/api/track/:id', description: 'Fetch complete track metadata using a Spotify ID.', fields: [{ name: 'id', label: 'Spotify track ID', value: '4iV5W9uYEdYUVa79Axb7Rh', required: true }] },
+    album: { path: '/api/album/:id', description: 'Fetch album details and its complete track listing.', fields: [{ name: 'id', label: 'Spotify album ID', value: '4aawyAB9vmqN3uQ7FjRGTy', required: true }] },
+    artist: { path: '/api/artist/:id', description: 'Fetch an artist profile, genres and metadata.', fields: [{ name: 'id', label: 'Spotify artist ID', value: '1dfeR4HaWDbWqFHLkxsg1d', required: true }] },
+    topTracks: { path: '/api/artist/:id/top-tracks', description: 'Fetch the top tracks for a Spotify artist.', fields: [{ name: 'id', label: 'Spotify artist ID', value: '1dfeR4HaWDbWqFHLkxsg1d', required: true }] },
+    artistAlbums: { path: '/api/artist/:id/albums', description: 'Fetch an artist discography with optional release filtering.', fields: [{ name: 'id', label: 'Spotify artist ID', value: '1dfeR4HaWDbWqFHLkxsg1d', required: true }, { name: 'type', label: 'Release type', type: 'select', options: ['all', 'album', 'single', 'compilation'], value: 'all' }, { name: 'limit', label: 'Results limit', type: 'number', value: '10' }] },
+    playlist: { path: '/api/playlist/:id', description: 'Fetch playlist metadata, owner information and tracks.', fields: [{ name: 'id', label: 'Spotify playlist ID', value: '37i9dQZF1DXcBWIGoYBM5M', required: true }] }
+  };
+  let activeTester = null;
+
+  function getTesterDefinition(path) {
+    if (path === '/api/token') return testerDefinitions.token;
+    if (path === '/api/health') return testerDefinitions.health;
+    if (path.startsWith('/api/search')) return testerDefinitions.search;
+    if (path.includes('/top-tracks')) return testerDefinitions.topTracks;
+    if (path.includes('/albums')) return testerDefinitions.artistAlbums;
+    if (path.startsWith('/api/track')) return testerDefinitions.track;
+    if (path.startsWith('/api/album')) return testerDefinitions.album;
+    if (path.startsWith('/api/artist')) return testerDefinitions.artist;
+    return testerDefinitions.playlist;
   }
+
+  function quickCall(path) { openTester(path); }
+
+  function openTester(path) {
+    activeTester = getTesterDefinition(path);
+    document.getElementById('testerMethod').textContent = 'GET';
+    document.getElementById('testerTag').textContent = activeTester.path.split('/').pop().replace(':id', 'ID');
+    document.getElementById('testerPath').textContent = activeTester.path;
+    document.getElementById('testerDescription').textContent = activeTester.description;
+    const params = document.getElementById('testerParams');
+    params.innerHTML = '';
+    (activeTester.fields || []).forEach(field => {
+      const wrap = document.createElement('div');
+      const options = field.options ? field.options.map(option => `<option value="${option}">${option}</option>`).join('') : '';
+      wrap.innerHTML = `<div class="tester-param-head"><span class="tester-param-name">${field.name}</span><span class="tester-param-type">${field.type === 'number' ? 'number' : 'string'} ${field.required ? '· required' : '· optional'}</span></div>${field.options ? `<select class="tester-input" data-param="${field.name}">${options}</select>` : `<input class="tester-input" data-param="${field.name}" type="${field.type || 'text'}" value="${field.value || ''}" placeholder="${field.label}">`}`;
+      params.appendChild(wrap);
+      const control = wrap.querySelector('[data-param]');
+      if (field.options) control.value = field.value;
+      control.addEventListener('input', updateTesterUrl);
+    });
+    document.getElementById('testerEmpty').style.display = 'block';
+    document.getElementById('testerOutput').classList.remove('visible');
+    document.getElementById('testerBackdrop').classList.add('open');
+    updateTesterUrl();
+  }
+
+  function buildTesterUrl() {
+    let path = activeTester.path;
+    const query = [];
+    document.querySelectorAll('#testerParams [data-param]').forEach(control => {
+      const value = control.value.trim();
+      if (control.dataset.param === 'id') path = path.replace(':id', encodeURIComponent(value));
+      else if (value) query.push(`${encodeURIComponent(control.dataset.param)}=${encodeURIComponent(value)}`);
+    });
+    return query.length ? `${path}?${query.join('&')}` : path;
+  }
+
+  function updateTesterUrl() { document.getElementById('testerUrl').textContent = window.location.origin + buildTesterUrl(); }
+  function copyTesterUrl() { navigator.clipboard.writeText(window.location.origin + buildTesterUrl()); }
+  function closeTester() { document.getElementById('testerBackdrop').classList.remove('open'); }
+
+  async function executeTesterRequest() {
+    const url = buildTesterUrl();
+    const button = document.getElementById('testerExecute');
+    const output = document.getElementById('testerOutput');
+    const empty = document.getElementById('testerEmpty');
+    const json = document.getElementById('testerJson');
+    document.getElementById('testerUrl').textContent = window.location.origin + url;
+    button.disabled = true; button.textContent = 'Loading...';
+    empty.style.display = 'none'; output.classList.add('visible'); json.classList.remove('error'); json.textContent = 'Requesting...';
+    try {
+      const started = performance.now();
+      const response = await fetch(url);
+      const data = await response.json();
+      json.textContent = JSON.stringify(data, null, 2);
+      if (!response.ok) json.classList.add('error');
+      document.getElementById('testerStatus').textContent = `${response.ok ? '● Success' : '● Failed'} · ${response.status}`;
+      document.getElementById('testerTiming').textContent = `${Math.round(performance.now() - started)} ms`;
+    } catch (error) {
+      json.textContent = 'Request failed: ' + error.message; json.classList.add('error');
+      document.getElementById('testerStatus').textContent = '● Network error';
+    } finally { button.disabled = false; button.textContent = '➤ Execute Request'; }
+  }
+
+  document.getElementById('testerBackdrop').addEventListener('click', e => { if (e.target.id === 'testerBackdrop') closeTester(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeTester(); });
 
   function toggleDoc(id) {
     document.getElementById(id).classList.toggle('open');
