@@ -128,6 +128,7 @@ const { respond, respondError } = require('./response');
 const { getToken, startScheduler } = require('./token-manager');
 
 const app = express();
+app.set('trust proxy', 1);
 const PORT = process.env.PORT || 5000;
 const START_TIME = Date.now();
 
